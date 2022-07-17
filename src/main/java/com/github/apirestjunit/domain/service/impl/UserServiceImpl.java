@@ -1,9 +1,11 @@
 package com.github.apirestjunit.domain.service.impl;
 
+import com.github.apirestjunit.domain.dto.UserDTO;
 import com.github.apirestjunit.domain.model.User;
 import com.github.apirestjunit.domain.repository.UserRepository;
 import com.github.apirestjunit.domain.service.UserService;
 import com.github.apirestjunit.domain.service.exceptions.ObjectNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,9 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private ModelMapper mapper;
 
     @Autowired
     private UserRepository repository;
@@ -26,6 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public User create(UserDTO dto) {
+        return repository.save(mapper.map(dto, User.class));
     }
 
 

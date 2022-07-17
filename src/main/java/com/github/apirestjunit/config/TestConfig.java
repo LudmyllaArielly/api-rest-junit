@@ -18,8 +18,8 @@ public class TestConfig {
 
     @Bean
     public void startDB(){
-        User u1 = new User(null, "Ana", "ana@xyz", "123");
-        User u2 = new User(null, "Lucas", "lucas@xyz", "321");
+        User u1 = new User(null, "Ana", "ana@xyz.com", "123");
+        User u2 = new User(null, "Lucas", "lucas@xyz.com", "321");
 
         repository.saveAll(List.of(u1, u2));
 
