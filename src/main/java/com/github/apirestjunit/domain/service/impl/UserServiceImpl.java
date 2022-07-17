@@ -4,6 +4,7 @@ import com.github.apirestjunit.domain.dto.UserDTO;
 import com.github.apirestjunit.domain.model.User;
 import com.github.apirestjunit.domain.repository.UserRepository;
 import com.github.apirestjunit.domain.service.UserService;
+import com.github.apirestjunit.domain.service.exceptions.DataIntegrityViolationException;
 import com.github.apirestjunit.domain.service.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserDTO dto) {
+        findByEmailUsed(dto);
         return repository.save(mapper.map(dto, User.class));
     }
 
+    private void findByEmailUsed(UserDTO dto){
+        Optional<User> user = repository.findByEmail(dto.getEmail());
+        if(user.isPresent()) {
+            throw new DataIntegrityViolationException("Email in use.");
+        }
+    }
 
 }
