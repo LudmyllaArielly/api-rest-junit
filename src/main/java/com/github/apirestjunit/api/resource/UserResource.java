@@ -1,6 +1,7 @@
 package com.github.apirestjunit.api.resource;
 
 import com.github.apirestjunit.domain.dto.UserDTO;
+import com.github.apirestjunit.domain.model.User;
 import com.github.apirestjunit.domain.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,12 @@ public class UserResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(userService.create(dto).getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> update (@PathVariable Long id, @RequestBody UserDTO dto){
+        dto.setId(id);
+        User user = userService.update(dto);
+        return ResponseEntity.ok(mapper.map(user, UserDTO.class));
     }
 }
