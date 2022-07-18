@@ -29,6 +29,7 @@ class UserServiceImplTest {
     public static final String PASSWORD = "123";
     public static final String OBJECT_NOT_FOUND = "Object not found.";
     public static final int INDEX = 0;
+    public static final String EMAIL_IN_USE = "Email in use.";
 
     @Mock
     private ModelMapper mapper;
@@ -112,7 +113,7 @@ class UserServiceImplTest {
            userService.create(dto);
        }catch (Exception ex) {
            assertEquals(DataIntegrityViolationException.class, ex.getClass());
-           assertEquals("Email in use.", ex.getMessage());
+           assertEquals(EMAIL_IN_USE, ex.getMessage());
        }
     }
 
@@ -130,11 +131,22 @@ class UserServiceImplTest {
         assertEquals(PASSWORD, response.getPassword());
     }
 
+    @Test
+   public void whenUpdateThenReturnAnDataIntegrityViolationException() {
+        Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(userOptional);
+
+        try {
+            userOptional.get().setId(2L);
+            userService.update(dto);
+        }catch (Exception ex) {
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
+            assertEquals(EMAIL_IN_USE, ex.getMessage());
+        }
+    }
 
     @Test
     void testDelete() {
     }
-
 
     private void startUser(){
         user = new User(ID, NAME, EMAIL, PASSWORD);
