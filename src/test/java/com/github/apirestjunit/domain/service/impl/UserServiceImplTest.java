@@ -3,6 +3,7 @@ package com.github.apirestjunit.domain.service.impl;
 import com.github.apirestjunit.domain.dto.UserDTO;
 import com.github.apirestjunit.domain.model.User;
 import com.github.apirestjunit.domain.repository.UserRepository;
+import com.github.apirestjunit.domain.service.exceptions.DataIntegrityViolationException;
 import com.github.apirestjunit.domain.service.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -100,7 +101,19 @@ class UserServiceImplTest {
         assertEquals(NAME, response.getName());
         assertEquals(EMAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
+    }
 
+    @Test
+    void whenCreateThenReturnAnDataIntegrityViolationException() {
+        Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(userOptional);
+
+       try {
+           userOptional.get().setId(2L);
+           userService.create(dto);
+       }catch (Exception ex) {
+           assertEquals(DataIntegrityViolationException.class, ex.getClass());
+           assertEquals("Email in use.", ex.getMessage());
+       }
     }
 
     @Test
