@@ -25,6 +25,7 @@ class UserServiceImplTest {
     public static final String NAME = "Ana";
     public static final String EMAIL = "ana@xyz.com";
     public static final String PASSWORD = "123";
+    public static final String OBJECT_NOT_FOUND = "Object not found.";
 
     @Mock
     private ModelMapper mapper;
@@ -60,13 +61,13 @@ class UserServiceImplTest {
 
     @Test
     public void whenFindByIdThenReturnAnObjectNotFoundException(){
-        Mockito.when(repository.findById(Mockito.anyLong())).thenThrow(new ObjectNotFoundException("Object not found."));
+        Mockito.when(repository.findById(Mockito.anyLong())).thenThrow(new ObjectNotFoundException(OBJECT_NOT_FOUND));
 
         try {
             userService.findById(ID);
         }catch (Exception ex) {
             assertEquals(ObjectNotFoundException.class, ex.getClass());
-            assertEquals("Object not found.", ex.getMessage());
+            assertEquals(OBJECT_NOT_FOUND, ex.getMessage());
         }
     }
 
