@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +27,7 @@ class UserServiceImplTest {
     public static final String EMAIL = "ana@xyz.com";
     public static final String PASSWORD = "123";
     public static final String OBJECT_NOT_FOUND = "Object not found.";
+    public static final int INDEX = 0;
 
     @Mock
     private ModelMapper mapper;
@@ -72,8 +74,18 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testFindAll() {
+    void whenFindAllThenReturnAnListOfUsers() {
+        Mockito.when(repository.findAll()).thenReturn(List.of(user));
 
+        List<User> response = userService.findAll();
+
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(User.class, response.get(INDEX).getClass());
+
+        assertEquals(ID, response.get(INDEX).getId());
+        assertEquals(NAME, response.get(INDEX).getName());
+        assertEquals(EMAIL, response.get(INDEX).getEmail());
     }
 
     @Test
