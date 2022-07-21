@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
 public class ResourceExceptionHandler {
 
     @ExceptionHandler(ObjectNotFoundException.class)
-    private ResponseEntity<StandardError> handleObjectNotFound(ObjectNotFoundException e, HttpServletRequest request){
+    public ResponseEntity<StandardError> handleObjectNotFound(ObjectNotFoundException e, HttpServletRequest request){
         StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(),
                 e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    private ResponseEntity<StandardError> handleDataIntegrityViolationException(DataIntegrityViolationException e, HttpServletRequest request){
+    public ResponseEntity<StandardError> handleDataIntegrityViolationException(DataIntegrityViolationException e, HttpServletRequest request){
         StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                 e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
